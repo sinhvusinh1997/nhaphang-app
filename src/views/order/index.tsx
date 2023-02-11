@@ -5,10 +5,9 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {Header} from '~/components';
 import {buttonStyles, textStyles} from '~/styles';
 
-export const Home = () => {
+export const Order = () => {
   return (
     <SafeAreaView>
       <View
@@ -17,7 +16,6 @@ export const Home = () => {
           width: '100%',
           justifyContent: 'flex-end',
         }}>
-        {/* <Header /> */}
         <TouchableOpacity
           style={[buttonStyles.buttonBase, buttonStyles.buttonPrimary]}>
           <Text
@@ -27,7 +25,7 @@ export const Home = () => {
               textStyles.textBold,
               {textTransform: 'uppercase'},
             ]}>
-            Login page
+            Order page
           </Text>
         </TouchableOpacity>
       </View>

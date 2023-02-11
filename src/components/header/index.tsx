@@ -3,11 +3,14 @@ import React from 'react';
 
 export const Header = () => {
   return (
-    <SafeAreaView>
-      <View style={{backgroundColor: 'red', height: 40}}>
-        <Text></Text>
+    <View style={{backgroundColor: 'red', height: 40}}>
+      <View>
+        <Text>back</Text>
       </View>
-    </SafeAreaView>
+      <View>
+        <Text>wallet - noti</Text>
+      </View>
+    </View>
   );
 };
 

@@ -35,6 +35,9 @@ export const AuthRegister = ({navigation}: any) => {
               shadowOffset: {width: 0, height: 4},
               shadowOpacity: 2,
               shadowRadius: 5,
+            }}
+            onPress={() => {
+              navigation.navigate('Login');
             }}>
             <Text
               style={{

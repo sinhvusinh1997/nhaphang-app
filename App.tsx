@@ -1,7 +1,7 @@
-import RootComponent from './src/views';
+import {AppNavigator} from '~/navigators';
 
 function App(): JSX.Element {
-  return <RootComponent />;
+  return <AppNavigator />;
 }
 
 export default App;
