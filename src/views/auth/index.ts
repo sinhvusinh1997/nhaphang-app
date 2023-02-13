@@ -1,3 +1,3 @@
 export * from './register';
 export * from './login';
-export * from './forgetPassword';
+export * from './authIndex';

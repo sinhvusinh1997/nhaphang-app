@@ -13,11 +13,11 @@ export const positionStyles = StyleSheet.create({
     ],
   },
   center: {
+    justifyContent: 'center',
     alignItems: 'center',
   },
   spaceEvenly: {
-    height: '100%',
-    width: '100%',
+    alignItems: 'center',
     justifyContent: 'space-evenly',
   },
 });

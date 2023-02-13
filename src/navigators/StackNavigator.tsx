@@ -1,21 +1,19 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
-import {AuthForgetPassword, AuthLogin, AuthRegister} from '~/views';
-import {DrawerNavigator} from './DrawerNavigator';
 import 'react-native-gesture-handler';
+import {AuthIndex} from '~/views';
+import {DrawerNavigator} from './DrawerNavigator';
 
 const Stack = createNativeStackNavigator();
 
 export const StackNavigator = () => {
   return (
     <Stack.Navigator
-      initialRouteName="Login"
+      initialRouteName="AuthIndex"
       screenOptions={{
         headerShown: false,
       }}>
-      <Stack.Screen name="Login" component={AuthLogin} />
-      <Stack.Screen name="Register" component={AuthRegister} />
-      <Stack.Screen name="ForgetPassword" component={AuthForgetPassword} />
+      <Stack.Screen name="AuthIndex" component={AuthIndex} />
       <Stack.Screen name="HomeDrawer" component={DrawerNavigator} />
     </Stack.Navigator>
   );

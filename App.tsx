@@ -1,7 +1,7 @@
 import {AppNavigator} from '~/navigators';
 
-function App(): JSX.Element {
+const App = (): JSX.Element => {
   return <AppNavigator />;
-}
+};
 
 export default App;

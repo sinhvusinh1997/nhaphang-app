@@ -4,7 +4,7 @@ export const buttonStyles = StyleSheet.create({
   buttonBase: {
     width: '50%',
     alignSelf: 'center',
-    borderRadius: 100,
+    borderRadius: 14,
     shadowColor: '#00000040',
     shadowOffset: {width: 0, height: 1},
     shadowOpacity: 10,
