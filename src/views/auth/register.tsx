@@ -1,83 +1,78 @@
-import React, {Component} from 'react';
-import {
-  ImageBackground,
-  SafeAreaView,
-  StatusBar,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React, {useState} from 'react';
+import {View} from 'react-native';
+import {ScrollView} from 'react-native-gesture-handler';
+import {ButtonTouch, FormInput} from '~/components';
+import {ICONs} from '~/library';
+import {buttonStyles, positionStyles} from '~/styles';
+
+const AuthPass = () => {
+  const [showPass, setShowPass] = useState(false);
+
+  return (
+    <>
+      <FormInput
+        type="password"
+        label="Mật khẩu"
+        placeholder="Mật khẩu"
+        icon={!showPass ? ICONs.LOCK : ICONs.UNLOCK}
+        onPress={() => setShowPass(!showPass)}
+        secureTextEntry={!showPass}
+      />
+      <FormInput
+        type="password"
+        label="Nhập lại mật khẩu"
+        placeholder="Nhập lại mật khẩu"
+        icon={!showPass ? ICONs.LOCK : ICONs.UNLOCK}
+        onPress={() => setShowPass(!showPass)}
+        secureTextEntry={!showPass}
+      />
+    </>
+  );
+};
 
 export const AuthRegister = ({navigation}: any) => {
   return (
-    <View>
-      <StatusBar barStyle={'light-content'} />
-      <SafeAreaView>
-        <View
-          style={{
-            height: '100%',
-            width: '100%',
-            justifyContent: 'space-between',
-            paddingBottom: 20,
-            paddingTop: 20,
-            borderWidth: 2,
-            borderColor: '#333',
-          }}>
-          <TouchableOpacity
-            style={{
-              borderWidth: 2,
-              borderColor: '#fff',
-              width: '50%',
-              alignSelf: 'center',
-              backgroundColor: '#fcdc9d',
-              borderRadius: 10,
-              shadowColor: '#192461',
-              shadowOffset: {width: 0, height: 4},
-              shadowOpacity: 2,
-              shadowRadius: 5,
-            }}
-            onPress={() => {
-              navigation.navigate('Login');
-            }}>
-            <Text
-              style={{
-                color: '#0d1933',
-                fontSize: 20,
-                textAlign: 'center',
-                paddingTop: 10,
-                paddingBottom: 10,
-                textTransform: 'uppercase',
-              }}>
-              More
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              borderWidth: 2,
-              borderColor: '#fff',
-              width: '50%',
-              alignSelf: 'center',
-              backgroundColor: '#0d1933',
-              borderRadius: 10,
-              shadowColor: '#192461',
-              shadowOffset: {width: 0, height: 4},
-              shadowOpacity: 2,
-              shadowRadius: 5,
-            }}>
-            <Text
-              style={{
-                color: '#c6bfc2',
-                fontSize: 20,
-                textAlign: 'center',
-                paddingTop: 10,
-                paddingBottom: 10,
-                textTransform: 'uppercase',
-              }}>
-              Back
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </SafeAreaView>
-    </View>
+    <ScrollView>
+      <View style={[positionStyles.center, {marginTop: 20}]}>
+        <FormInput
+          type="username"
+          label="Tên đăng nhập"
+          placeholder="Tên đăng nhập"
+          icon={ICONs.USER}
+        />
+        <FormInput
+          type="fullname"
+          label="Họ & tên"
+          placeholder="Họ & tên"
+          icon={ICONs.USER}
+        />
+        <FormInput
+          type="email"
+          label="Emall"
+          placeholder="Email"
+          icon={ICONs.EMAIL}
+          keyboardType="email-address"
+        />
+        <FormInput
+          type="phone"
+          label="Số điện thoại"
+          placeholder="Số điện thoại"
+          icon={ICONs.PHONE}
+          keyboardType="numeric"
+        />
+        <AuthPass />
+        <ButtonTouch
+          textButton="Đăng ký"
+          styleButton={[
+            buttonStyles.buttonBase,
+            buttonStyles.buttonPrimary,
+            {marginTop: 20},
+          ]}
+          styleText={[
+            {fontWeight: 'bold', color: '#fff', textTransform: 'uppercase'},
+          ]}
+        />
+      </View>
+    </ScrollView>
   );
 };
