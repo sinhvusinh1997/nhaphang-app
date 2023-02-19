@@ -1,10 +1,10 @@
 import React from 'react';
 import {Text, View} from 'react-native';
 
-export const Login = () => {
+export const ForgetPass = () => {
   return (
     <View>
-      <Text>Login page</Text>
+      <Text>ForgetPass</Text>
     </View>
   );
 };
