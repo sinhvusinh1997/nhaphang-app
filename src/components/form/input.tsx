@@ -1,9 +1,10 @@
 import {StyleSheet, Text, View} from 'react-native';
+import React from 'react';
 
-export const Order = () => {
+export const CustomInput = () => {
   return (
     <View>
-      <Text>order page</Text>
+      <Text>CustomInput</Text>
     </View>
   );
 };
