@@ -1,7 +1,7 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React, {useState} from 'react';
 import 'react-native-gesture-handler';
-import {Login} from '~/views';
+import {Login, Register} from '~/views';
 import {DrawerNavigator} from './DrawerNavigator';
 
 const Stack = createNativeStackNavigator();
@@ -14,7 +14,7 @@ export const StackNavigator = () => {
       screenOptions={{
         headerShown: false,
       }}>
-      <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="Register" component={Register} />
       <Stack.Screen name="HomeDrawer" component={DrawerNavigator} />
     </Stack.Navigator>
   );

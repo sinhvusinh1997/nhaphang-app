@@ -9,7 +9,7 @@ const Tab = createBottomTabNavigator();
 
 const initTabScreen = [
   {
-    icon: ICONs.HOUSE,
+    icon: ICONs.HOME,
     name: 'homePage',
     title: 'Trang chu',
     component: Home,
