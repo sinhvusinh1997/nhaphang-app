@@ -18,7 +18,7 @@ const style = StyleSheet.create({
 
 const initDrawerScreen = [
   {
-    icon: ICONs.HOUSE,
+    icon: ICONs.HOME,
     name: 'home',
     title: 'Trang chủ',
     component: TabNavigators,

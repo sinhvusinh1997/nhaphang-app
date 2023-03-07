@@ -1,48 +1,57 @@
 import React, {useState} from 'react';
-import {
-  Dimensions,
-  Image,
-  Keyboard,
-  SafeAreaView,
-  StatusBar,
-  StyleSheet,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
+import {Dimensions, Image, StyleSheet, View} from 'react-native';
 import {CustomButton, CustomInput, CustomLink} from '~/components';
 import {AuthenLayout} from '~/layout';
 import {COLORs, ICONs, IMAGEs} from '~/library';
+import {TLogin} from '~/types';
+
+import {yupResolver} from '@hookform/resolvers/yup';
+import {useForm} from 'react-hook-form';
+import {SchemaLogin} from '~/schema';
 
 const {width, height} = Dimensions.get('window');
 
 const FormGroup = () => {
   const [showPass, setShowPass] = useState(false);
 
+  const {control, handleSubmit} = useForm<TLogin>({
+    mode: 'onBlur',
+    resolver: yupResolver(SchemaLogin),
+  });
+  const onSubmit = (data: TLogin) => console.log('login data: ', data);
+
   return (
     <>
-      <CustomInput props={{placeholder: 'Nhập username', icon: ICONs.USER}} />
       <CustomInput
-        props={{
+        {...{
+          control,
+          name: 'UserName',
+          placeholder: 'Nhập username',
+          icon: ICONs.USER,
+        }}
+      />
+      <CustomInput
+        {...{
+          control,
+          name: 'Password',
           placeholder: 'Nhập mật khẩu',
           icon: showPass ? ICONs.UNLOCK : ICONs.LOCK,
           secureTextEntry: !showPass,
           onPressIcon: () => setShowPass(!showPass),
-          // errorMsg: 'error error',
         }}
       />
       <CustomButton
-        props={{
+        {...{
           name: 'Đăng nhập',
           buttonStyle: {backgroundColor: COLORs.PRIMARY},
-          onPress: () => console.log('Đăng nhập'),
+          onPress: handleSubmit(onSubmit),
         }}
       />
     </>
   );
 };
 
-export const Login = () => {
+export const Login = ({navigation}: any) => {
   return (
     <AuthenLayout>
       <View style={styles.logo}>
@@ -55,22 +64,22 @@ export const Login = () => {
       <View style={styles.form}>
         <FormGroup />
         <CustomLink
-          props={{
+          {...{
             title: 'Quên mật khẩu?',
-            onPress: () => console.log('Quên mật khẩu'),
+            onPress: () => navigation.navigate('ForgetPass'),
             linkStyle: {maxWidth: 120},
             textStyle: {color: COLORs.SECONDARY},
           }}
         />
-      </View>
-      <View style={styles.another}>
-        <CustomButton
-          props={{
-            name: 'Đăng ký',
-            buttonStyle: {backgroundColor: COLORs.INFOR},
-            onPress: () => console.log('Đăng ký'),
-          }}
-        />
+        <View style={styles.another}>
+          <CustomButton
+            {...{
+              name: 'Đăng ký',
+              buttonStyle: {backgroundColor: COLORs.INFOR},
+              onPress: () => navigation.navigate('Register'),
+            }}
+          />
+        </View>
       </View>
     </AuthenLayout>
   );
@@ -84,7 +93,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   form: {
-    width: '70%',
+    width: '80%',
     alignItems: 'center',
   },
   another: {

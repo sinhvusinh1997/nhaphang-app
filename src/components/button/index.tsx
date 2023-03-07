@@ -1,5 +1,8 @@
 import React from 'react';
 import {
+  Image,
+  ImageSourcePropType,
+  ImageStyle,
   StyleProp,
   StyleSheet,
   Text,
@@ -7,21 +10,34 @@ import {
   TouchableOpacity,
   ViewStyle,
 } from 'react-native';
-import {COLORs} from '~/library';
+import {COLORs, ICONs} from '~/library';
 import {shadowStyle} from '~/styles';
 
-type TCustomButton = {
-  name: string;
+interface TCustomButton {
+  name?: string;
+  icon?: ImageSourcePropType;
   onPress: () => void;
   buttonStyle?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
-};
+  iconStyle?: StyleProp<ImageStyle>;
+}
 
-export const CustomButton: React.FC<{props: TCustomButton}> = ({props}) => {
+export const CustomButton = ({
+  name,
+  icon,
+  iconStyle,
+  onPress,
+  buttonStyle,
+  textStyle,
+}: TCustomButton) => {
   return (
     <TouchableOpacity
-      style={[styles.defaultStyle, props?.buttonStyle, shadowStyle.black]}>
-      <Text style={styles.text}>{props.name}</Text>
+      style={[styles.defaultStyle, buttonStyle, shadowStyle.black]}
+      onPress={onPress}>
+      {name && <Text style={styles.text}>{name}</Text>}
+      {icon && (
+        <Image source={ICONs.BACK} style={iconStyle} resizeMode="contain" />
+      )}
     </TouchableOpacity>
   );
 };
