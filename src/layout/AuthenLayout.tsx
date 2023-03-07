@@ -1,9 +1,7 @@
 import React from 'react';
 import {
-  Dimensions,
   Keyboard,
   SafeAreaView,
-  ScrollView,
   StatusBar,
   StyleSheet,
   TouchableWithoutFeedback,

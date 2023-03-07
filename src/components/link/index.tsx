@@ -9,19 +9,22 @@ import {
 } from 'react-native';
 import {COLORs} from '~/library';
 
-type TCustomLink = {
+interface TCustomLink {
   title: string;
   onPress: () => void;
   linkStyle?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
-};
+}
 
-export const CustomLink: React.FC<{props: TCustomLink}> = ({props}) => {
+export const CustomLink = ({
+  title,
+  onPress,
+  linkStyle,
+  textStyle,
+}: TCustomLink) => {
   return (
-    <TouchableOpacity
-      style={[styles.container, props?.linkStyle]}
-      onPress={props.onPress}>
-      <Text style={[styles.text, props?.textStyle]}>{props?.title}</Text>
+    <TouchableOpacity style={[styles.container, linkStyle]} onPress={onPress}>
+      <Text style={[styles.text, textStyle]}>{title}</Text>
     </TouchableOpacity>
   );
 };
