@@ -1,5 +1,5 @@
 import {yupResolver} from '@hookform/resolvers/yup';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {FieldValues, Path, useForm} from 'react-hook-form';
 import {
   Dimensions,
@@ -59,16 +59,16 @@ const FormGroup = () => {
     {
       placeholder: 'Nhập mật khẩu',
       name: 'Password',
-      icon: !showPassword ? ICONs.UNLOCK : ICONs.LOCK,
+      icon: showPassword ? ICONs.UNLOCK : ICONs.LOCK,
       onPressIcon: () => setShowPassword(!showPassword),
-      secureTextEntry: showPassword,
+      secureTextEntry: !showPassword,
     },
     {
       placeholder: 'Nhập lại mật khẩu',
       name: 'ConfirmPassword',
-      icon: !showConfirmPassword ? ICONs.UNLOCK : ICONs.LOCK,
+      icon: showConfirmPassword ? ICONs.UNLOCK : ICONs.LOCK,
       onPressIcon: () => setShowConfirmPassword(!showConfirmPassword),
-      secureTextEntry: showConfirmPassword,
+      secureTextEntry: !showConfirmPassword,
     },
   ];
 
@@ -80,6 +80,7 @@ const FormGroup = () => {
   const onRegister = (data: TRegister) => {
     console.log(data);
   };
+
   return (
     <>
       {InputTemplate.map(input => (

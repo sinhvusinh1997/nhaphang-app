@@ -16,7 +16,7 @@ interface IProps {
 export const AuthenLayout = ({children}: IProps) => {
   return (
     <LinearGradient
-      colors={['#F5851E99', '#1F1F6799']}
+      colors={['#f5f5f5', '#1F1F67']}
       start={{x: 1, y: 0}}
       end={{x: 0, y: 1}}
       style={{
@@ -24,7 +24,7 @@ export const AuthenLayout = ({children}: IProps) => {
         flex: 1,
       }}>
       <View style={styles.container}>
-        <StatusBar barStyle={'light-content'} />
+        <StatusBar barStyle={'dark-content'} />
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <SafeAreaView style={styles.inner}>{children}</SafeAreaView>
           {/* {children} */}
@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     borderWidth: 1,
+    backgroundColor: '#f2f2f2',
   },
   inner: {
     width: '100%',

@@ -24,7 +24,6 @@ interface TCustomInput<TFieldValues extends FieldValues> {
   innerStyle?: StyleProp<ViewStyle>;
   inputStyle?: StyleProp<ViewStyle>;
   iconStyle?: StyleProp<ImageStyle>;
-  success?: boolean;
   secureTextEntry?: boolean | undefined;
   onPressIcon?: () => void;
   keyboardType?: KeyboardTypeOptions | undefined;
@@ -38,7 +37,6 @@ export const CustomInput = <TFieldValues extends FieldValues = FieldValues>({
   innerStyle,
   inputStyle,
   iconStyle,
-  success,
   secureTextEntry,
   onPressIcon,
   keyboardType = 'default',
@@ -54,7 +52,6 @@ export const CustomInput = <TFieldValues extends FieldValues = FieldValues>({
               styles.inner,
               innerStyle,
               error ? styles.innerError : null,
-              success ? styles.innerSuccess : null,
               shadowStyle.black,
             ]}>
             {icon && (
@@ -68,18 +65,13 @@ export const CustomInput = <TFieldValues extends FieldValues = FieldValues>({
                     style={[
                       styles.icon,
                       error ? styles.iconError : null,
-                      success ? styles.iconSuccess : null,
                       iconStyle,
                     ]}
                     resizeMode="contain"
                   />
                 </TouchableOpacity>
                 <View
-                  style={[
-                    styles.line,
-                    error ? styles.lineError : null,
-                    success ? styles.lineSuccess : null,
-                  ]}></View>
+                  style={[styles.line, error ? styles.lineError : null]}></View>
               </>
             )}
             <>
@@ -92,8 +84,7 @@ export const CustomInput = <TFieldValues extends FieldValues = FieldValues>({
                 style={[
                   styles.input,
                   inputStyle,
-                  error ? styles.inputError : null,
-                  success ? styles.inputSuccess : null,
+                  error ? styles.inputError : {color: COLORs.BLACK},
                 ]}
                 onChangeText={value => onChange(value)}
                 onBlur={onBlur}
@@ -161,20 +152,5 @@ const styles = StyleSheet.create({
   },
   inputError: {
     color: COLORs.ERROR,
-  },
-
-  // success styles
-  iconSuccess: {
-    tintColor: COLORs.SUCCESS,
-  },
-  lineSuccess: {
-    backgroundColor: COLORs.SUCCESS,
-  },
-  innerSuccess: {
-    borderWidth: 1,
-    borderColor: COLORs.SUCCESS,
-  },
-  inputSuccess: {
-    color: COLORs.SUCCESS,
   },
 });
