@@ -1,24 +1,54 @@
-import React, {useState} from 'react';
-import {Dimensions, Image, StyleSheet, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {Alert, Dimensions, Image, StyleSheet, View} from 'react-native';
 import {CustomButton, CustomInput, CustomLink} from '~/components';
 import {AuthenLayout} from '~/layout';
 import {COLORs, ICONs, IMAGEs} from '~/library';
 import {TLogin} from '~/types';
-
 import {yupResolver} from '@hookform/resolvers/yup';
 import {useForm} from 'react-hook-form';
 import {SchemaLogin} from '~/schema';
+import {useIsFocused} from '@react-navigation/native';
+import {authenticate} from '~/api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const {width, height} = Dimensions.get('window');
 
 const FormGroup = () => {
   const [showPass, setShowPass] = useState(false);
+  const outFocus = useIsFocused();
 
-  const {control, handleSubmit} = useForm<TLogin>({
+  const storeData = async (token: string) => {
+    try {
+      await AsyncStorage.setItem('@storage_token', token);
+    } catch (e) {
+      // saving error
+    }
+  };
+
+  const {control, handleSubmit, clearErrors, reset} = useForm<TLogin>({
     mode: 'onBlur',
+    defaultValues: {
+      UserName: '',
+      Password: '',
+    },
     resolver: yupResolver(SchemaLogin),
   });
-  const onSubmit = (data: TLogin) => console.log('login data: ', data);
+
+  useEffect(() => {
+    reset();
+    clearErrors();
+  }, [outFocus]);
+
+  const onSubmit = (data: TLogin) => {
+    authenticate
+      .login({UserName: data?.UserName, Password: data?.Password})
+      .then(res => {
+        storeData(res?.Data?.token);
+      })
+      .catch(err => {
+        Alert.alert('Không thể đăng nhập!', `${err.ResultMessage}`);
+      });
+  };
 
   return (
     <>
@@ -58,7 +88,10 @@ export const Login = ({navigation}: any) => {
         <Image
           source={IMAGEs.LOGO}
           resizeMode="contain"
-          style={{width: '100%', height: '100%'}}
+          style={{
+            width: '100%',
+            height: '100%',
+          }}
         />
       </View>
       <View style={styles.form}>
@@ -88,8 +121,8 @@ export const Login = ({navigation}: any) => {
 const styles = StyleSheet.create({
   logo: {
     height: '20%',
+    padding: 20,
     width: width,
-    padding: 10,
     marginBottom: 20,
   },
   form: {
