@@ -3,12 +3,14 @@ import {useIsFocused, useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {useForm} from 'react-hook-form';
 import {Alert, Dimensions, Image, StyleSheet, View} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
 import {authenticate} from '~/api';
 import {CustomButton, CustomInput, CustomLink} from '~/components';
 import {AuthenLayout} from '~/layout';
 import {COLORs, ICONs, IMAGEs} from '~/library';
+import {RootState, setUser} from '~/redux';
 import {TLogin, TViewProps} from '~/types';
-import {LocalStorage, SchemaLogin} from '~/utils';
+import {LocalStorage, SchemaLogin, _format} from '~/utils';
 
 const {width, height} = Dimensions.get('window');
 
@@ -17,6 +19,8 @@ const FormGroup = ({setUserToken}: any) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showPass, setShowPass] = useState(false);
   const outFocus = useIsFocused();
+  const dispatch = useDispatch();
+  const {current} = useSelector((state: RootState) => state.user);
 
   const {
     control,
@@ -40,10 +44,18 @@ const FormGroup = ({setUserToken}: any) => {
       .login({UserName: data?.UserName, Password: data?.Password})
       .then(res => {
         const newToken = res?.Data?.token;
+
         LocalStorage.setToken(newToken);
+        const user: any = JSON.parse(
+          _format.getJWTDecode(newToken)[
+            'http://schemas.microsoft.com/ws/2008/06/identity/claims/userdata'
+          ],
+        );
+
+        dispatch(setUser(user));
         setUserToken(newToken);
       })
-      .catch(err => Alert.alert('Lỗi đăng nhập!', `${err.ResultMessage}`))
+      .catch(err => Alert.alert('Lỗi đăng nhập!', `${err}`))
       .finally(() => setIsLoading(false));
   };
 
