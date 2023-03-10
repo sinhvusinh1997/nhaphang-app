@@ -12,7 +12,7 @@ export const authenticate = {
     return post<{token: string}>('/login-app', frmData);
   },
 
-  register: (data: TRegister) => post('/register-app', data),
+  register: (data: TRegister) => post('/register', data),
 
   logout: () => post('/logout'),
 

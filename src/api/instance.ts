@@ -32,11 +32,11 @@ instance.interceptors.request.use(
     return config;
   },
   (error: any) => {
-    console.log(
-      `%c ${error?.response?.status}  :`,
-      'color: red; font-weight: bold',
-      error?.response?.data,
-    );
+    // console.log(
+    //   `%c ${error?.response?.status}  :`,
+    //   'color: red; font-weight: bold',
+    //   error?.response?.data,
+    // );
     return Promise.reject(error);
   },
 );

@@ -13,5 +13,5 @@ export interface TRegister {
 }
 
 export interface TForgetPassword {
-  Email: string;
+  UserName: string;
 }

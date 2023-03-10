@@ -1,21 +1,49 @@
 import {yupResolver} from '@hookform/resolvers/yup';
-import React from 'react';
+import React, {useState} from 'react';
 import {useForm} from 'react-hook-form';
-import {StyleSheet, Text, View} from 'react-native';
+import {Alert, StyleSheet, Text, View} from 'react-native';
 import {CustomButton, CustomInput} from '~/components';
 import {AuthenLayout} from '~/layout';
 import {COLORs, ICONs} from '~/library';
-import {SchemaForgetPass} from '~/schema';
-import {TForgetPassword} from '~/types';
+import {SchemaForgetPass} from '~/utils';
+import {TForgetPassword, TViewProps} from '~/types';
+import {useNavigation} from '@react-navigation/native';
+import {authenticate} from '~/api';
 
-export const ForgetPass = ({navigation}: any) => {
-  const {control, handleSubmit} = useForm<TForgetPassword>({
+export const ForgetPass = () => {
+  const navigation = useNavigation<TViewProps['navigation']>();
+  const [isLoading, setIsLoading] = useState(false);
+  const {control, handleSubmit, reset} = useForm<TForgetPassword>({
     mode: 'onBlur',
     resolver: yupResolver(SchemaForgetPass),
   });
 
   const onSubmit = (data: TForgetPassword) => {
-    console.log(data);
+    setIsLoading(true);
+    authenticate
+      .forgotPassword({userName: data.UserName})
+      .then(res => {
+        Alert.alert(
+          'Gửi yêu cầu thành công!',
+          'Vui lòng kiểm tra email để lấy mật khẩu mới!',
+          [
+            {
+              text: 'Đăng nhập',
+              onPress: () => navigation.navigate('Login'),
+            },
+            {
+              text: 'Huỷ',
+            },
+          ],
+        );
+      })
+      .catch(err =>
+        Alert.alert('Gửi yêu cầu thất bại!', `Email không tồn tại!`),
+      )
+      .finally(() => {
+        reset();
+        setIsLoading(false);
+      });
   };
 
   return (
@@ -23,14 +51,17 @@ export const ForgetPass = ({navigation}: any) => {
       <View style={styles.inner}>
         <View style={styles.logo}>
           <CustomButton
-            icon={ICONs.BACK}
-            onPress={() => navigation.goBack()}
-            iconStyle={styles.icon}
-            buttonStyle={{
-              paddingVertical: 6,
-              margin: 0,
-              width: '16%',
-              backgroundColor: COLORs.SECONDARY,
+            {...{
+              icon: ICONs.BACK,
+              onPress: () => navigation.goBack(),
+              iconStyle: styles.icon,
+              buttonStyle: {
+                paddingVertical: 6,
+                margin: 0,
+                width: '16%',
+                backgroundColor: COLORs.SECONDARY,
+              },
+              disabled: isLoading,
             }}
           />
           <Text style={styles.text}>Reset mật khẩu!</Text>
@@ -42,17 +73,20 @@ export const ForgetPass = ({navigation}: any) => {
           <CustomInput
             {...{
               control,
-              name: 'Email',
+              name: 'UserName',
               placeholder: 'Nhập Email đã đăng ký!',
               icon: ICONs.EMAIL,
+              disabled: isLoading,
             }}
           />
         </View>
         <CustomButton
           {...{
             name: 'Gửi yêu cầu khởi tạo!',
-            buttonStyle: {backgroundColor: COLORs.PRIMARY, width: '80%'},
+            buttonStyle: {backgroundColor: COLORs.PRIMARY, width: '100%'},
             onPress: handleSubmit(onSubmit),
+            isLoading,
+            disabled: isLoading,
           }}
         />
       </View>

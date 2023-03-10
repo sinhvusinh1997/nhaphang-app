@@ -12,6 +12,7 @@ import {
   ViewStyle,
   ImageStyle,
   KeyboardTypeOptions,
+  ActivityIndicator,
 } from 'react-native';
 import {COLORs} from '~/library';
 import {shadowStyle} from '~/styles';
@@ -27,6 +28,7 @@ interface TCustomInput<TFieldValues extends FieldValues> {
   secureTextEntry?: boolean | undefined;
   onPressIcon?: () => void;
   keyboardType?: KeyboardTypeOptions | undefined;
+  disabled?: boolean;
 }
 
 export const CustomInput = <TFieldValues extends FieldValues = FieldValues>({
@@ -40,25 +42,31 @@ export const CustomInput = <TFieldValues extends FieldValues = FieldValues>({
   secureTextEntry,
   onPressIcon,
   keyboardType = 'default',
+  disabled,
 }: TCustomInput<TFieldValues>) => {
   return (
     <View>
       <Controller
         control={control}
         name={name}
-        render={({field: {onChange, onBlur, value}, fieldState: {error}}) => (
+        render={({
+          field: {onChange, onBlur, value},
+          fieldState: {error, isTouched, isDirty, invalid},
+          formState: {isValidating},
+        }) => (
           <View
             style={[
               styles.inner,
               innerStyle,
               error ? styles.innerError : null,
               shadowStyle.black,
+              disabled ? styles.disabled : null,
             ]}>
             {icon && (
               <>
                 <TouchableOpacity
                   onPress={onPressIcon}
-                  disabled={!onPressIcon}
+                  disabled={!onPressIcon || disabled}
                   style={{flexDirection: 'row', alignItems: 'center'}}>
                   <Image
                     source={icon}
@@ -77,7 +85,7 @@ export const CustomInput = <TFieldValues extends FieldValues = FieldValues>({
             <>
               <TextInput
                 placeholder={placeholder}
-                placeholderTextColor={COLORs.BLACK}
+                placeholderTextColor={COLORs.PLACEHOLDER}
                 secureTextEntry={secureTextEntry}
                 keyboardType={keyboardType}
                 autoCapitalize={'none'}
@@ -86,10 +94,15 @@ export const CustomInput = <TFieldValues extends FieldValues = FieldValues>({
                   inputStyle,
                   error ? styles.inputError : {color: COLORs.BLACK},
                 ]}
+                editable={!disabled}
                 onChangeText={value => onChange(value)}
                 onBlur={onBlur}
                 value={value}
               />
+              {isValidating && isTouched && invalid && (
+                <ActivityIndicator size="small" color={COLORs.SECONDARY} />
+              )}
+
               {error && <Text style={styles.error}>{error?.message}</Text>}
             </>
           </View>
@@ -100,7 +113,9 @@ export const CustomInput = <TFieldValues extends FieldValues = FieldValues>({
 };
 
 const styles = StyleSheet.create({
-  container: {},
+  disabled: {
+    opacity: 0.4,
+  },
   error: {
     color: COLORs.ERROR,
     fontSize: 12,

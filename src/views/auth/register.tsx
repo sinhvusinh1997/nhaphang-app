@@ -1,22 +1,23 @@
 import {yupResolver} from '@hookform/resolvers/yup';
-import React, {useEffect, useState} from 'react';
-import {FieldValues, Path, useForm} from 'react-hook-form';
+import {useNavigation} from '@react-navigation/native';
+import React, {useState} from 'react';
+import {useForm} from 'react-hook-form';
 import {
+  Alert,
   Dimensions,
-  Image,
   ImageSourcePropType,
   KeyboardTypeOptions,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
+import {authenticate} from '~/api';
 import {CustomButton, CustomInput} from '~/components';
 import {AuthenLayout} from '~/layout';
-import {COLORs, ICONs, IMAGEs} from '~/library';
-import {SchemaResgiter} from '~/schema';
-import {TRegister} from '~/types';
+import {COLORs, ICONs} from '~/library';
+import {TRegister, TViewProps} from '~/types';
+import {LocalStorage, SchemaResgiter} from '~/utils';
 
 const {width, height} = Dimensions.get('window');
 
@@ -29,9 +30,11 @@ interface TInputTemplate {
   secureTextEntry?: boolean;
 }
 
-const FormGroup = () => {
+export const Register = (props: any) => {
+  const navigation = useNavigation<TViewProps['navigation']>();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const InputTemplate: TInputTemplate[] = [
     {
@@ -72,46 +75,29 @@ const FormGroup = () => {
     },
   ];
 
-  const {control, handleSubmit} = useForm<TRegister>({
+  const {
+    control,
+    handleSubmit,
+    formState: {},
+  } = useForm<TRegister>({
     mode: 'onBlur',
     resolver: yupResolver(SchemaResgiter),
   });
 
   const onRegister = (data: TRegister) => {
-    console.log(data);
+    setIsLoading(true);
+    authenticate
+      .register(data)
+      .then(res => {
+        const newToken = res?.Data?.token;
+        LocalStorage.setToken(newToken);
+        props.setUserToken(newToken);
+      })
+      .catch(err => {
+        Alert.alert('Tạo tài khoản thất bại! Vui lòng thử lại.');
+      })
+      .finally(() => setIsLoading(false));
   };
-
-  return (
-    <>
-      {InputTemplate.map(input => (
-        <CustomInput
-          key={input.placeholder}
-          {...{
-            control,
-            name: input.name,
-            placeholder: input.placeholder,
-            icon: input.icon,
-            keyboardType: input.keyboardType || 'default',
-            onPressIcon: input?.onPressIcon,
-            secureTextEntry: input?.secureTextEntry,
-          }}
-        />
-      ))}
-      <CustomButton
-        {...{
-          name: 'Đăng ký',
-          onPress: handleSubmit(onRegister),
-          buttonStyle: {
-            backgroundColor: COLORs.PRIMARY,
-          },
-          textStyle: undefined,
-        }}
-      />
-    </>
-  );
-};
-
-export const Register = ({navigation}: any) => {
   return (
     <AuthenLayout>
       <ScrollView style={{flex: 1, width: width}}>
@@ -127,11 +113,37 @@ export const Register = ({navigation}: any) => {
                 width: '16%',
                 backgroundColor: COLORs.SECONDARY,
               }}
+              disabled={isLoading}
             />
             <Text style={styles.text}>Tạo tài khoản</Text>
           </View>
           <View style={styles.inputGroup}>
-            <FormGroup />
+            {InputTemplate.map(input => (
+              <CustomInput
+                key={input.placeholder}
+                {...{
+                  control,
+                  name: input.name,
+                  placeholder: input.placeholder,
+                  icon: input.icon,
+                  keyboardType: input.keyboardType || 'default',
+                  onPressIcon: input?.onPressIcon,
+                  secureTextEntry: input?.secureTextEntry,
+                  disabled: isLoading,
+                }}
+              />
+            ))}
+            <CustomButton
+              {...{
+                name: 'Đăng ký',
+                onPress: handleSubmit(onRegister),
+                buttonStyle: {
+                  backgroundColor: COLORs.PRIMARY,
+                },
+                textStyle: undefined,
+                isLoading: isLoading,
+              }}
+            />
           </View>
         </View>
       </ScrollView>
