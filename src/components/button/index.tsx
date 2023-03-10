@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  ActivityIndicator,
   Image,
   ImageSourcePropType,
   ImageStyle,
@@ -20,6 +21,8 @@ interface TCustomButton {
   buttonStyle?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
   iconStyle?: StyleProp<ImageStyle>;
+  isLoading?: boolean;
+  disabled?: boolean;
 }
 
 export const CustomButton = ({
@@ -29,14 +32,28 @@ export const CustomButton = ({
   onPress,
   buttonStyle,
   textStyle,
+  isLoading = false,
+  disabled = false,
 }: TCustomButton) => {
   return (
     <TouchableOpacity
-      style={[styles.defaultStyle, buttonStyle, shadowStyle.black]}
-      onPress={onPress}>
-      {name && <Text style={styles.text}>{name}</Text>}
-      {icon && (
-        <Image source={ICONs.BACK} style={iconStyle} resizeMode="contain" />
+      style={[
+        styles.defaultStyle,
+        buttonStyle,
+        shadowStyle.black,
+        disabled ? styles.disabled : null,
+      ]}
+      onPress={onPress}
+      disabled={disabled || isLoading}>
+      {isLoading ? (
+        <ActivityIndicator size="small" color={'#fff'} />
+      ) : (
+        <>
+          {name && <Text style={styles.text}>{name}</Text>}
+          {icon && (
+            <Image source={ICONs.BACK} style={iconStyle} resizeMode="contain" />
+          )}
+        </>
       )}
     </TouchableOpacity>
   );
@@ -57,5 +74,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
+  },
+  disabled: {
+    opacity: 0.4,
   },
 });

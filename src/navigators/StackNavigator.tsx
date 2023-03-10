@@ -3,37 +3,55 @@ import React, {useState} from 'react';
 import 'react-native-gesture-handler';
 import {ForgetPass, Login, Register} from '~/views';
 import {DrawerNavigator} from './DrawerNavigator';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Platform} from 'react-native';
 
 const Stack = createNativeStackNavigator();
 
 export const StackNavigator = () => {
-  const [isLogged, setIsLogged] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [userToken, setUserToken] = useState<any>(null);
 
-  const getData = async () => {
-    try {
-      const value = await AsyncStorage.getItem('@storage_token');
-      setIsLogged(!!value);
-      Platform;
-      console.log(Platform.OS, value);
-    } catch (e) {
-      // error reading value
-    }
-  };
+  // const getUserToken = async () => {
+  //   const token = await AsyncStorage.getItem('@storage_token');
+  //   console.log('token: ', token);
+  //   try {
+  //     if (token) {
+  //       setUserToken(token);
+  //     }
+  //   } catch (e) {
+  //     // error reading value
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
-  getData();
+  // useEffect(() => {
+  //   getUserToken();
+  // }, []);
+
+  // if (isLoading) {
+  //   return <ActivityIndicator size="large" />;
+  // }
 
   return (
     <Stack.Navigator
-      initialRouteName={isLogged ? 'HomeDrawer' : 'Login'}
       screenOptions={{
         headerShown: false,
       }}>
-      <Stack.Screen name="Login" component={Login} />
-      <Stack.Screen name="Register" component={Register} />
-      <Stack.Screen name="ForgetPass" component={ForgetPass} />
-      <Stack.Screen name="HomeDrawer" component={DrawerNavigator} />
+      {userToken === null ? (
+        <>
+          <Stack.Screen name="Login">
+            {props => <Login {...props} setUserToken={setUserToken} />}
+          </Stack.Screen>
+          <Stack.Screen name="Register">
+            {props => <Register {...props} setUserToken={setUserToken} />}
+          </Stack.Screen>
+          <Stack.Screen name="ForgetPass">
+            {props => <ForgetPass {...props} setUserToken={setUserToken} />}
+          </Stack.Screen>
+        </>
+      ) : (
+        <Stack.Screen name="HomeDrawer" component={DrawerNavigator} />
+      )}
     </Stack.Navigator>
   );
 };

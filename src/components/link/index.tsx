@@ -14,6 +14,7 @@ interface TCustomLink {
   onPress: () => void;
   linkStyle?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
+  disabled?: boolean;
 }
 
 export const CustomLink = ({
@@ -21,9 +22,13 @@ export const CustomLink = ({
   onPress,
   linkStyle,
   textStyle,
+  disabled,
 }: TCustomLink) => {
   return (
-    <TouchableOpacity style={[styles.container, linkStyle]} onPress={onPress}>
+    <TouchableOpacity
+      style={[styles.container, linkStyle, disabled ? styles.disabled : null]}
+      onPress={onPress}
+      disabled={disabled}>
       <Text style={[styles.text, textStyle]}>{title}</Text>
     </TouchableOpacity>
   );
@@ -38,5 +43,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold',
     textAlign: 'center',
+  },
+  disabled: {
+    opacity: 0.4,
   },
 });

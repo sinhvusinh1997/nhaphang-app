@@ -1,53 +1,50 @@
+import {yupResolver} from '@hookform/resolvers/yup';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
+import {useForm} from 'react-hook-form';
 import {Alert, Dimensions, Image, StyleSheet, View} from 'react-native';
+import {authenticate} from '~/api';
 import {CustomButton, CustomInput, CustomLink} from '~/components';
 import {AuthenLayout} from '~/layout';
 import {COLORs, ICONs, IMAGEs} from '~/library';
-import {TLogin} from '~/types';
-import {yupResolver} from '@hookform/resolvers/yup';
-import {useForm} from 'react-hook-form';
-import {SchemaLogin} from '~/schema';
-import {useIsFocused} from '@react-navigation/native';
-import {authenticate} from '~/api';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {TLogin, TViewProps} from '~/types';
+import {LocalStorage, SchemaLogin} from '~/utils';
 
 const {width, height} = Dimensions.get('window');
 
-const FormGroup = () => {
+const FormGroup = ({setUserToken}: any) => {
+  const navigation = useNavigation<TViewProps['navigation']>();
+  const [isLoading, setIsLoading] = useState(false);
   const [showPass, setShowPass] = useState(false);
   const outFocus = useIsFocused();
 
-  const storeData = async (token: string) => {
-    try {
-      await AsyncStorage.setItem('@storage_token', token);
-    } catch (e) {
-      // saving error
-    }
-  };
-
-  const {control, handleSubmit, clearErrors, reset} = useForm<TLogin>({
+  const {
+    control,
+    handleSubmit,
+    clearErrors,
+    reset,
+    formState: {isSubmitted, isSubmitSuccessful, isLoading: formLoading},
+  } = useForm<TLogin>({
     mode: 'onBlur',
-    defaultValues: {
-      UserName: '',
-      Password: '',
-    },
     resolver: yupResolver(SchemaLogin),
   });
 
   useEffect(() => {
     reset();
-    clearErrors();
+    // clearErrors();
   }, [outFocus]);
 
   const onSubmit = (data: TLogin) => {
+    setIsLoading(true);
     authenticate
       .login({UserName: data?.UserName, Password: data?.Password})
       .then(res => {
-        storeData(res?.Data?.token);
+        const newToken = res?.Data?.token;
+        LocalStorage.setToken(newToken);
+        setUserToken(newToken);
       })
-      .catch(err => {
-        Alert.alert('Không thể đăng nhập!', `${err.ResultMessage}`);
-      });
+      .catch(err => Alert.alert('Lỗi đăng nhập!', `${err.ResultMessage}`))
+      .finally(() => setIsLoading(false));
   };
 
   return (
@@ -58,6 +55,7 @@ const FormGroup = () => {
           name: 'UserName',
           placeholder: 'Nhập username',
           icon: ICONs.USER,
+          disabled: isLoading,
         }}
       />
       <CustomInput
@@ -68,6 +66,7 @@ const FormGroup = () => {
           icon: showPass ? ICONs.UNLOCK : ICONs.LOCK,
           secureTextEntry: !showPass,
           onPressIcon: () => setShowPass(!showPass),
+          disabled: isLoading,
         }}
       />
       <CustomButton
@@ -75,13 +74,33 @@ const FormGroup = () => {
           name: 'Đăng nhập',
           buttonStyle: {backgroundColor: COLORs.PRIMARY},
           onPress: handleSubmit(onSubmit),
+          isLoading,
         }}
       />
+      <CustomLink
+        {...{
+          title: 'Quên mật khẩu?',
+          onPress: () => navigation.navigate('ForgetPass'),
+          linkStyle: {maxWidth: 120},
+          textStyle: {color: COLORs.SECONDARY},
+          disabled: isLoading,
+        }}
+      />
+      <View style={styles.another}>
+        <CustomButton
+          {...{
+            name: 'Đăng ký',
+            buttonStyle: {backgroundColor: COLORs.INFOR},
+            onPress: () => navigation.navigate('Register'),
+            disabled: isLoading,
+          }}
+        />
+      </View>
     </>
   );
 };
 
-export const Login = ({navigation}: any) => {
+export const Login = (props: any) => {
   return (
     <AuthenLayout>
       <View style={styles.logo}>
@@ -95,24 +114,7 @@ export const Login = ({navigation}: any) => {
         />
       </View>
       <View style={styles.form}>
-        <FormGroup />
-        <CustomLink
-          {...{
-            title: 'Quên mật khẩu?',
-            onPress: () => navigation.navigate('ForgetPass'),
-            linkStyle: {maxWidth: 120},
-            textStyle: {color: COLORs.SECONDARY},
-          }}
-        />
-        <View style={styles.another}>
-          <CustomButton
-            {...{
-              name: 'Đăng ký',
-              buttonStyle: {backgroundColor: COLORs.INFOR},
-              onPress: () => navigation.navigate('Register'),
-            }}
-          />
-        </View>
+        <FormGroup setUserToken={props.setUserToken} />
       </View>
     </AuthenLayout>
   );
