@@ -5,7 +5,9 @@ import {
 import React from 'react';
 import {Image, ImageBackground, StyleSheet, Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {useSelector} from 'react-redux';
 import {ICONs, IMAGEs} from '~/library';
+import {RootState} from '~/redux';
 
 /** HEAD INFORMATION OF USER
  *
@@ -54,6 +56,8 @@ const styleHeadInfo = StyleSheet.create({
 });
 
 const HeadInfo = () => {
+  const {current} = useSelector((state: RootState) => state.user);
+
   return (
     <ImageBackground source={IMAGEs.BG_MENU} style={styleHeadInfo.bg}>
       <Image
@@ -62,7 +66,7 @@ const HeadInfo = () => {
         style={styleHeadInfo.userImage}
       />
       <View style={styleHeadInfo.containerMenu}>
-        <Text style={styleHeadInfo.text}>Vũ Trường Sinh</Text>
+        <Text style={styleHeadInfo.text}>{current?.UserName}</Text>
         <Text style={styleHeadInfo.vip}>VIP 10</Text>
         <View
           style={{
