@@ -5,7 +5,6 @@ const USER = 'USER';
 
 export const LocalStorage = {
   async setToken(token: string) {
-    console.log('localStorage.setToken: ', token);
     await AsyncStorage.setItem(TOKEN, token);
   },
   async getToken() {

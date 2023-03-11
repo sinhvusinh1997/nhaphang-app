@@ -30,7 +30,7 @@ interface TInputTemplate {
   secureTextEntry?: boolean;
 }
 
-export const Register = (props: any) => {
+export const Register = () => {
   const navigation = useNavigation<TViewProps['navigation']>();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -91,7 +91,6 @@ export const Register = (props: any) => {
       .then(res => {
         const newToken = res?.Data?.token;
         LocalStorage.setToken(newToken);
-        props.setUserToken(newToken);
       })
       .catch(err => {
         Alert.alert('Tạo tài khoản thất bại! Vui lòng thử lại.');
