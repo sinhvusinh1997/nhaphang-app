@@ -7,6 +7,7 @@ const ERROR = '#DD2222';
 const SUCCESS = '#28a745';
 const INFOR = '#2686ED';
 const WARNING = '#ffc107';
+const ERROR_2 = '#ef5350';
 
 export const COLORs = {
   PRIMARY,
@@ -14,6 +15,7 @@ export const COLORs = {
   WHITE,
   BLACK,
   ERROR,
+  ERROR_2,
   SUCCESS,
   INFOR,
   WARNING,

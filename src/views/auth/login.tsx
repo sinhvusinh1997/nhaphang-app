@@ -3,24 +3,23 @@ import {useIsFocused, useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {useForm} from 'react-hook-form';
 import {Alert, Dimensions, Image, StyleSheet, View} from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import {authenticate} from '~/api';
 import {CustomButton, CustomInput, CustomLink} from '~/components';
 import {AuthenLayout} from '~/layout';
 import {COLORs, ICONs, IMAGEs} from '~/library';
-import {RootState, setUser} from '~/redux';
+import {setUser, SIGN_IN} from '~/redux';
 import {TLogin, TViewProps} from '~/types';
 import {LocalStorage, SchemaLogin, _format} from '~/utils';
 
 const {width, height} = Dimensions.get('window');
 
-const FormGroup = ({setUserToken}: any) => {
+const FormGroup = () => {
   const navigation = useNavigation<TViewProps['navigation']>();
   const [isLoading, setIsLoading] = useState(false);
   const [showPass, setShowPass] = useState(false);
   const outFocus = useIsFocused();
   const dispatch = useDispatch();
-  const {current} = useSelector((state: RootState) => state.user);
 
   const {
     control,
@@ -35,7 +34,6 @@ const FormGroup = ({setUserToken}: any) => {
 
   useEffect(() => {
     reset();
-    // clearErrors();
   }, [outFocus]);
 
   const onSubmit = (data: TLogin) => {
@@ -53,9 +51,9 @@ const FormGroup = ({setUserToken}: any) => {
         );
 
         dispatch(setUser(user));
-        setUserToken(newToken);
+        dispatch(SIGN_IN(newToken));
       })
-      .catch(err => Alert.alert('Lỗi đăng nhập!', `${err}`))
+      .catch(err => Alert.alert('Lỗi đăng nhập!', `${err?.ResultMessage}`))
       .finally(() => setIsLoading(false));
   };
 
@@ -112,7 +110,7 @@ const FormGroup = ({setUserToken}: any) => {
   );
 };
 
-export const Login = (props: any) => {
+export const Login = () => {
   return (
     <AuthenLayout>
       <View style={styles.logo}>
@@ -126,7 +124,7 @@ export const Login = (props: any) => {
         />
       </View>
       <View style={styles.form}>
-        <FormGroup setUserToken={props.setUserToken} />
+        <FormGroup />
       </View>
     </AuthenLayout>
   );

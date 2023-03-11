@@ -24,11 +24,11 @@ const getUrl = (config: any) => {
 // Intercept all request
 instance.interceptors.request.use(
   async (config: any) => {
-    console.log(
-      `%c ${config?.method?.toUpperCase()} - ${getUrl(config)}:`,
-      'color: #0086b3; font-weight: bold',
-      config,
-    );
+    // console.log(
+    //   `%c ${config?.method?.toUpperCase()} - ${getUrl(config)}:`,
+    //   'color: #0086b3; font-weight: bold',
+    //   config,
+    // );
     return config;
   },
   (error: any) => {
@@ -44,11 +44,11 @@ instance.interceptors.request.use(
 // Intercept all responses
 instance.interceptors.response.use(
   (response: AxiosResponse) => {
-    console.log(
-      `%c ${response?.status} - ${getUrl(response?.config)}:`,
-      'color: #008000; font-weight: bold',
-      response,
-    );
+    // console.log(
+    //   `%c ${response?.status} - ${getUrl(response?.config)}:`,
+    //   'color: #008000; font-weight: bold',
+    //   response,
+    // );
     return response;
   },
   (error: any) => {

@@ -4,10 +4,12 @@ import {
 } from '@react-navigation/drawer';
 import React from 'react';
 import {Image, ImageBackground, StyleSheet, Text, View} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import {useDispatch} from 'react-redux';
 import {useSelector} from 'react-redux';
-import {ICONs, IMAGEs} from '~/library';
-import {RootState} from '~/redux';
+import {CustomButton} from '~/components';
+import {COLORs, ICONs, IMAGEs} from '~/library';
+import {RootState, SIGN_OUT} from '~/redux';
+import {LocalStorage} from '~/utils';
 
 /** HEAD INFORMATION OF USER
  *
@@ -56,7 +58,7 @@ const styleHeadInfo = StyleSheet.create({
 });
 
 const HeadInfo = () => {
-  const {current} = useSelector((state: RootState) => state.user);
+  const {currentUser} = useSelector((state: RootState) => state.user);
 
   return (
     <ImageBackground source={IMAGEs.BG_MENU} style={styleHeadInfo.bg}>
@@ -66,7 +68,7 @@ const HeadInfo = () => {
         style={styleHeadInfo.userImage}
       />
       <View style={styleHeadInfo.containerMenu}>
-        <Text style={styleHeadInfo.text}>{current?.UserName}</Text>
+        <Text style={styleHeadInfo.text}>{currentUser?.UserName}</Text>
         <Text style={styleHeadInfo.vip}>VIP 10</Text>
         <View
           style={{
@@ -90,25 +92,45 @@ const HeadInfo = () => {
  * @returns Button to logout
  */
 
+const LogoutStyles = StyleSheet.create({
+  button: {
+    width: '50%',
+    borderRadius: 16,
+    padding: 10,
+    justifyContent: 'flex-end',
+    backgroundColor: COLORs.ERROR_2,
+  },
+  text: {
+    textAlign: 'center',
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+});
+
 const Logout = () => {
+  const dispatch = useDispatch();
+
+  const handleLogout = async () => {
+    try {
+      await LocalStorage.deleteToken();
+      dispatch(SIGN_OUT(''));
+    } catch (error) {}
+  };
+
   return (
     <View
       style={{
         padding: 10,
         paddingBottom: 50,
       }}>
-      <TouchableOpacity
-        style={{
-          width: '50%',
-          borderRadius: 16,
-          padding: 10,
-          justifyContent: 'flex-end',
-          backgroundColor: '#ef5350',
-        }}>
-        <Text style={{textAlign: 'center', color: '#fff', fontWeight: 'bold'}}>
-          ĐĂNG XUẤT
-        </Text>
-      </TouchableOpacity>
+      <CustomButton
+        {...{
+          name: 'Đăng xuất',
+          buttonStyle: LogoutStyles.button,
+          onPress: handleLogout,
+          textStyle: LogoutStyles.text,
+        }}
+      />
     </View>
   );
 };

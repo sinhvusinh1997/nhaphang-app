@@ -3,7 +3,7 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 const userSlice = createSlice({
   name: 'user',
   initialState: {
-    current: {
+    currentUser: {
       UserGroupId: null,
       UserId: null,
       UserName: '',
@@ -12,8 +12,8 @@ const userSlice = createSlice({
   reducers: {
     setUser(state, action: PayloadAction<any>) {
       return {
-        current: {
-          ...state.current,
+        currentUser: {
+          ...state.currentUser,
           ...action.payload,
         },
       };
